@@ -1,0 +1,18 @@
+# docker-compose.yml
+services:
+  eufy-onvif-ptz:
+    build: .
+    container_name: eufy-onvif-ptz
+    restart: unless-stopped
+    environment:
+      EUFY_WS: ws://eufy-security-ws:3000        # your eufy-security-ws address
+      CAMS: 8001=T8W11P0000000000:living_room,8002=T8W11P1111111111:kitchen   # PORT=SERIAL[:name]
+      # STEP_MS: 700     # repeat interval while a button is held
+      # MAX_STEPS: 15    # safety cap if Stop never arrives
+      # PRESETS: 4
+    # No published ports: put it on the same docker network as Frigate instead.
+    networks: [frigate]
+networks:
+  frigate:
+    external: true
+    name: frigate_default   # Frigate's network name in your setup
